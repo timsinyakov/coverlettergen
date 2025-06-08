@@ -103,7 +103,7 @@
             const coverLetterDisplay = document.getElementById('coverLetterDisplay');
             const outputContainer = document.getElementById('outputContainer');
             const copyBtn = document.getElementById('copyBtn');
-            const downloadPdfBtn = document.getElementById('downloadPdfBtn'); // Get reference to the new button
+            const downloadPdfBtn = document.getElementById('downloadPdfBtn');
             const messageBox = document.getElementById('messageBox');
             const messageText = document.getElementById('messageText');
             const messageBoxCloseBtn = document.getElementById('messageBoxCloseBtn');
@@ -135,7 +135,7 @@
                 const platform = inputPlatform.value.trim();
                 const companyCommitment = inputCompanyCommitment.value.trim();
 
-                // Basic validation updated to exclude company address
+                // Basic validation updated
                 if (!date || !hiringManagerTitle || !companyName || !jobTitle || !platform || !companyCommitment) {
                     showMessageBox('Please fill in all required fields (marked by placeholders).');
                     return;
@@ -173,10 +173,8 @@ Tim Sinyakov`;
             });
 
             copyBtn.addEventListener('click', () => {
-                // To copy the text, we'll create a temporary textarea,
-                // populate it with the plain text, copy from it, then remove it.
                 const tempTextArea = document.createElement('textarea');
-                tempTextArea.value = coverLetterDisplay.innerText; // Get plain text from the div
+                tempTextArea.value = coverLetterDisplay.innerText;
                 document.body.appendChild(tempTextArea);
                 tempTextArea.select();
                 try {
@@ -191,15 +189,18 @@ Tim Sinyakov`;
             });
 
             downloadPdfBtn.addEventListener('click', () => {
-                const { jsPDF } = window.jspdf; // Get jsPDF from the window object
+                const { jsPDF } = window.jspdf;
                 const doc = new jsPDF();
 
-                const textContent = coverLetterDisplay.innerText; // Get the plain text content
-                const lines = doc.splitTextToSize(textContent, 180); // Split text into lines that fit within 180 units width
+                const textContent = coverLetterDisplay.innerText;
+                // Adjusted text width for more "full A4 width" appearance (200mm out of 210mm)
+                const textWidth = 200;
+                const lines = doc.splitTextToSize(textContent, textWidth);
 
+                // Adjusted margin to 5mm for left/right
+                const margin = 5;
                 let y = 20; // Starting Y position
                 const lineHeight = 7; // Line height
-                const margin = 10; // Left/Right margin
 
                 doc.setFont("helvetica", "normal");
                 doc.setFontSize(11);
